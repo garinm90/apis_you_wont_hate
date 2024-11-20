@@ -1,10 +1,20 @@
+from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 
 from .dependencies import get_query_token, get_token_header
 from .internal import admin
 from .routers import items, users
+from .database import create_db_and_tables
+from .factories import UserFactory
 
-app = FastAPI(dependencies=[Depends(get_query_token)])
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
+
+
+app = FastAPI(dependencies=[Depends(get_query_token)], lifespan=lifespan)
 
 
 app.include_router(users.router)
@@ -20,4 +30,5 @@ app.include_router(
 
 @app.get("/")
 async def root():
+
     return {"message": "Hello Bigger Applications!"}
