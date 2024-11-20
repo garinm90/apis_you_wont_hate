@@ -4,12 +4,23 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
+
 dependencies = [
     "fastapi[standard]>=0.115.5",
     "sqlmodel>=0.0.22",
+    "typer>=0.13.1",
 ]
 
 [dependency-groups]
-dev = [
-    "faker>=33.0.0",
-]
+dev = ["factory-boy>=3.3.1"]
+
+[project.scripts]
+app-cli = "app.commands:main"
+
+
+[tool.hatch.build.targets.wheel]
+packages = ['app']
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
