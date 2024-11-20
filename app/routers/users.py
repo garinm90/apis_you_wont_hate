@@ -1,18 +1,20 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlmodel import SQLModel, Session, select
+
+from app.database import get_session
+from app.models import GenderEnum, User
 
 router = APIRouter()
 
 
-@router.get("/users/", tags=["users"])
-async def read_users():
-    return [{"username": "Rick"}, {"username": "Morty"}]
+class UserPublic(SQLModel):
+    name: str
+    gender: GenderEnum
 
 
-@router.get("/users/me", tags=["users"])
-async def read_user_me():
-    return {"username": "fakecurrentuser"}
 
+@router.get("/users/", response_model=list[UserPublic])
+async def read_users(session: Session=Depends(get_session)):
+    hereos = session.exec(select(User)).all()
+    return hereos
 
-@router.get("/users/{username}", tags=["users"])
-async def read_user(username: str):
-    return {"username": username}
