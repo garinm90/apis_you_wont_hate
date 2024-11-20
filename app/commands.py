@@ -14,6 +14,9 @@ def seed_database():
 def create_database():
     create_db_and_tables()
 
+#TODO 
+# Add command for creating migrations.
+# Add command for making migrations.
 
 @app.callback()
 def callback():
